@@ -1,0 +1,105 @@
+<app-navbar></app-navbar>
+<div class="row" style="padding: 5rem; margin-left: 5rem;">
+ 
+    <div class="col-9">
+      <h2>Find and edit players</h2>
+        <div class="d-flex align-items-center">
+            <form class="w-50 me-3" style="justify-content: center;">
+              <input [ngModelOptions]="{standalone: true}" [(ngModel)]="searchText" (ngModelChange)="onSearch()" type="search" class="form-control" placeholder="Search for a player" aria-label="Search">
+            </form>        
+        </div>
+        <div class="table-responsive">
+    <table class="table table-hover table-dark table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
+      <caption>Click on a row in order to edit or delete player</caption>
+      <thead>
+        <tr>
+          <th scope="col" (click)="sortString('name')" style="cursor: pointer;">Name</th>
+          <th scope="col" (click)="sortString('surname')" style="cursor: pointer;">Surname</th>
+          <th scope="col" (click)="sortAge()"  style="cursor: pointer;">Year of Birth</th>
+          <th scope="col" style="cursor: pointer;">Selection</th>
+         
+        </tr>
+      </thead>
+      <tbody>
+      
+        
+       <tr *ngFor ="let p of searchedPlayers" (click)="onPlayer(p)" style="cursor: pointer;">
+         <td>{{p.name}}</td>
+         <td>{{p.surname}}</td>
+         <td >{{p.birthDate | date:'yyyy'}}</td>
+         <td>{{p.selection.selectionName}}</td>
+       </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  
+  <div class="col-3" style="min-width: 15rem;">
+    <div class="card text-center">
+      <div class="card-header" *ngIf="isEditing===false; else Editing">
+        
+        <h2>Add new player</h2>
+      </div>
+      <ng-template #Editing>
+        <div class="card-header">
+          <h2><span style="float: left;">Edit player</span>
+            <span style="float: right;">
+              <button type="button" class="btn btn-outline-danger" (click)="onExit()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+              </svg>
+              Close
+            </button></span>
+          </h2>
+         
+        </div>
+      </ng-template>
+      <form [formGroup]="addPlayerForm">
+      <div class="card-body">
+       
+       
+          <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
+            <label for="firstName">First name</label>
+            <input [readonly]="isEditing" formControlName="firstName" type="text" class="form-control" id="firstName" placeholder="Enter player's first name">
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="lastName">Last name</label>
+            <input [readonly]="isEditing" formControlName="lastName" type="lastName" class="form-control" id="lastName" placeholder="Enter player's last name">
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
+            <label for="birthDate">Birth date</label>
+            <input [readonly]="isEditing" formControlName="birthDate" type="date" class="form-control" id="birthDate" [disabled]="true">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
+            <label for="selectionID">Selection</label>
+            <select class="form-control" id="selectionID" formControlName="selectionID">
+              <option  *ngFor="let s of selectionsApi" value="{{s.selectionID}}">"{{s.selectionName}} {{s.selectionID}}"</option>
+            </select>
+          </div>
+        
+      </div>
+      <div *ngIf="isEditing==false; else footEditing" class="card-footer text-muted">
+        <div style="margin-bottom: 2rem;">
+          <button type="submit" class="btn btn-dark" [disabled]="addPlayerForm.invalid" (click)="onAddPlayer()">Add player</button>
+          </div>
+      </div>
+      <ng-template #footEditing>
+        <div class="card-footer text-muted">
+          <div style="margin-bottom: 2rem;">
+            <button type="submit" class="btn btn-dark" [disabled]="addPlayerForm.invalid" (click)="onUpdatePlayer()" style="margin-top: 1rem;">Update player</button>
+            <button type="submit" class="btn btn-danger" [disabled]="addPlayerForm.invalid" (click)="onDeletePlayer()" style="margin-top: 1rem; margin-left: 1rem;">Delete player</button>
+            </div>
+        </div>
+      </ng-template>
+      
+    </form>
+    </div>
+  </div>
+
+  
+</div>
+
+
+<!-- Srediti sta kad nema igraca, srediti greske, srediti vezu sa serverom, ulepsati malo sve -->
