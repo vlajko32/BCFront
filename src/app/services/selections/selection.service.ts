@@ -17,6 +17,14 @@ export class SelectionService {
     })
   }
 
+  getSelectionByID(id: number){
+    return this.http.get(environment.apiUrl + 'Selection/' + id,{
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+  }
+
   getSelectionAges(){
     return this.http.get(environment.apiUrl + 'Selection/ages')
   }

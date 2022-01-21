@@ -5,19 +5,19 @@
       <a class="nav-link bg-dark text-white fw-bolder" aria-current="page">{{sa['selectionAgeName']}}</a>
     </li>
   </ul>
-  <div class="row" style="padding: 3rem; justify-content: center;">
-  <div class="card" style="width: 18rem; margin: 3rem" *ngFor="let sel of selectionsApi">
+  <div class="row" style="padding: 2rem; justify-content: center;">
+  <div class="card" style="width: 18rem; margin: 2rem; background-color: rgb(231, 226, 226);" *ngFor="let sel of selectionsApi">
       <div class="card-header fs-6">
         {{sel.selectionAge['selectionAgeName']}}
       </div>
       <div class="card-body">
         <h2 class="card-title">{{sel.selectionName}}</h2>
         <ul class="list-group list-group-flush" style="margin-bottom: 1rem;">
-          <li class="list-group-item fw-bold fs-6"># of players: 12</li>
-          <li class="list-group-item fw-bold fs-6"># of coaches: 10</li>
+          <li class="list-group-item fw-bold fs-6" style="background-color: rgb(196, 194, 194);"># of players: {{sel.players.length}}</li>
+          <li class="list-group-item fw-bold fs-6" style="background-color: rgb(196, 194, 194);"># of coaches: {{sel.coaches.length}}</li>
         </ul>
       
-        <a href="#" class="btn btn-dark">View and edit</a>
+        <a [routerLink]="['/selections',sel.selectionID]" class="btn btn-dark">View and edit</a>
       </div>
     </div>
   </div>

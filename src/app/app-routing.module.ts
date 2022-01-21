@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/auth/register/register.component
 import { LoginComponent } from './components/auth/login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ViewSelectionComponent } from './components/selections/view-selection/view-selection.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'selections',
     component: SelectionsComponent
+  },
+  {
+    path: 'selections/:selectionID',
+    component: ViewSelectionComponent
   },
   {
     path: 'players',

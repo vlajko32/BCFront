@@ -11,6 +11,9 @@ import { HomeOperatorComponent } from './components/operator/home-operator/home-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SelectionsComponent } from './components/selections/selections.component';
 import { PlayersComponent } from './components/players/players.component';
+import { ViewSelectionComponent } from './components/selections/view-selection/view-selection.component';
+import {MatTableModule} from '@angular/material/table';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,7 +22,8 @@ import { PlayersComponent } from './components/players/players.component';
     RegisterComponent,
     HomeOperatorComponent,
     SelectionsComponent,
-    PlayersComponent
+    PlayersComponent,
+    ViewSelectionComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +32,7 @@ import { PlayersComponent } from './components/players/players.component';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    MatTableModule
     
   ],
   providers: [HttpClient],
