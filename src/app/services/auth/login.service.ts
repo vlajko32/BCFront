@@ -26,9 +26,9 @@ export class LoginService {
       this.authService.token = value.token.toString();
 
       if(value.user.role === 'Operator'){
-        this.router.navigateByUrl('/home-operator');
+        this.router.navigateByUrl('/selections');
       }else if(value.user.role === 'Coach'){
-        console.log('Coach');
+        this.router.navigateByUrl('/user-home');
       }else{
         this.router.navigateByUrl('/register');
       }

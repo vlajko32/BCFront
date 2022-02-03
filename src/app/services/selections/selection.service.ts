@@ -28,4 +28,8 @@ export class SelectionService {
   getSelectionAges(){
     return this.http.get(environment.apiUrl + 'Selection/ages')
   }
+
+  updateSelection(id: number, selection: any)
+  {
+    return this.http.put(environment.apiUrl + `Selection/${id}`,selection);  }
 }

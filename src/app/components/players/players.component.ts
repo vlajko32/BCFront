@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Player } from './../../domain/player';
 import { SelectionService } from './../../services/selections/selection.service';
 import { PlayerService } from './../../services/players/player.service';
@@ -22,11 +23,19 @@ export class PlayersComponent implements OnInit {
   newPlayer: Player;
   selectedPlayer: Player;
   searchText = '';
-  constructor(private playerService: PlayerService, private selectionService: SelectionService) { }
+  playersWithSelection: null;
+  playersWithoutSelection: null;
+  constructor(private playerService: PlayerService, private selectionService: SelectionService, private route: Router) { }
 
   ngOnInit(): void {
     this.playerService.getPlayers().subscribe((data) =>{
       this.playersApi = this.searchedPlayers = data;
+      this.playersWithSelection = this.searchedPlayers.filter(function(player) {
+        return player['selection']!=null;
+      });
+      this.playersWithoutSelection = this.searchedPlayers.filter(function(player) {
+        return player['selection']==null;
+      });
       
     }, error => {
       console.log(error);
@@ -43,7 +52,7 @@ export class PlayersComponent implements OnInit {
       firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),     
       lastName: new FormControl(null,  [Validators.required, Validators.minLength(3)]),
       birthDate: new FormControl(null, Validators.required),
-      selectionID: new FormControl(null, Validators.required)
+      selectionID: new FormControl(null)
   })
 
   
@@ -72,6 +81,14 @@ onAddPlayer(){
   }
 }
 
+
+checkSelection(player: Player): boolean{
+  if(player.selectionID!=null){
+    return true;
+  }
+  return true;
+}
+
 onPlayer(p)
 {
   this.dateConvert = p.birthDate.slice(0,10);
@@ -80,19 +97,19 @@ onPlayer(p)
     firstName: p.name,
     lastName: p.surname,
     birthDate: this.dateConvert,
-    selectionID: p.selectionID
+    selectionID: p.selectionID!=null ? p.selectionID : 0
   })
+  
   this.selectedPlayer = p;
 }
 
 sortString(info){
-  
   this.isDesc = !this.isDesc;
 
   let direction = this.isDesc ? 1: -1;
 
-  this.playersApi.sort(function (a,b) {
-    
+  this.searchedPlayers.sort(function (a,b) {
+
     if (a[info] < b[info]) {
       return -1 * direction;
     }
@@ -108,10 +125,10 @@ sortString(info){
 sortAge(){
   if(this.orderAge)
   {
-  this.playersApi.sort((a,b) => this.getYear(a.birthDate) - this.getYear(b.birthDate));
+   this.searchedPlayers.sort((a,b) => this.getYear(a.birthDate) - this.getYear(b.birthDate));
   }
   else{
-    this.playersApi.sort((a,b) => this.getYear(b.birthDate) - this.getYear(a.birthDate));
+    this.searchedPlayers.sort((a,b) => this.getYear(b.birthDate) - this.getYear(a.birthDate));
 
   }
   this.orderAge = !this.orderAge;
@@ -130,6 +147,7 @@ onUpdatePlayer(){
     selectionID: this.addPlayerForm.get('selectionID').value
   }
   this.playerService.updatePlayer(this.selectedPlayer.playerID,this.newPlayer).subscribe(data=> {
+    console.log("Djes");
     this.updateList();
     this.resetForm();
   });
@@ -162,11 +180,11 @@ onDeletePlayer(){
 }
 
 resetForm(){
-  this.addPlayerForm.setValue({
-    firstName: null,
-    lastName: null,
-    birthDate: null,
-    selectionID: null
+  this.addPlayerForm = new FormGroup({
+    firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),     
+    lastName: new FormControl(null,  [Validators.required, Validators.minLength(3)]),
+    birthDate: new FormControl(null, Validators.required),
+    selectionID: new FormControl(null)
   });
   this.isEditing = false;
 }

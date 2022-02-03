@@ -19,6 +19,14 @@ export class PlayerService {
     })
   }
 
+  getPlayersWithoutSelection(){
+    return this.http.get(environment.apiUrl + 'player/withoutSelection',{
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+  }
+
   addPlayer(item){
     
     return this.http.post(environment.apiUrl + 'player/create',item);

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
   user = localStorage.getItem('userID');
-  constructor() { }
+  role = localStorage.getItem('role');
+  constructor( private router: Router) { }
 
   ngOnInit(): void {
   }
   
+  onLogOut(){
+    console.log("Oprem");
+    localStorage.clear();
+    this.router.navigateByUrl('/login');
+
+  }
 }

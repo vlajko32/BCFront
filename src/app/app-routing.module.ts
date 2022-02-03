@@ -1,11 +1,15 @@
+import { TrainingsComponent } from './components/coach-pages/trainings/trainings.component';
+import { MySelectionComponent } from './components/coach-pages/my-selection/my-selection.component';
+import { HomeComponent } from './components/coach-pages/home/home.component';
+import { CoachesComponent } from './components/coaches/coaches.component';
 import { PlayersComponent } from './components/players/players.component';
 import { SelectionsComponent } from './components/selections/selections.component';
-import { HomeOperatorComponent } from './components/operator/home-operator/home-operator.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ViewSelectionComponent } from './components/selections/view-selection/view-selection.component';
+import { AdminGuard } from './services/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -17,17 +21,12 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent
   },
-  {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'home-operator',
-    component: HomeOperatorComponent
-  },
+ 
+
   {
     path: 'selections',
-    component: SelectionsComponent
+    component: SelectionsComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: 'selections/:selectionID',
@@ -35,7 +34,24 @@ const routes: Routes = [
   },
   {
     path: 'players',
-    component: PlayersComponent
+    component: PlayersComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'coaches',
+    component: CoachesComponent
+  },
+  {
+    path: 'user-home',
+    component:HomeComponent
+  },
+  {
+    path:'my-selection',
+    component: MySelectionComponent
+  },
+  {
+    path:'trainings',
+    component: TrainingsComponent
   }
 ];
 

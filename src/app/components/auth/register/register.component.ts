@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit {
       password: new FormControl(null, Validators.required),
       confirmPassword: new FormControl(null, Validators.required),
       firstName: new FormControl(null, Validators.required),
-      lastName: new FormControl(null, Validators.required),
+      lastName: new FormControl(null, Validators.required)
       
     });
     
@@ -31,12 +31,12 @@ export class RegisterComponent implements OnInit {
   register()
   {
     this.user = {
-      role: 'Operator',
+      role: 'Coach',
       username: this.registerForm.get('username').value,
       password: this.registerForm.get('password').value,
       name: this.registerForm.get('firstName').value,
-      surname: this.registerForm.get('lastName').value
-
+      surname: this.registerForm.get('lastName').value,
+      yearsOfExperience: 15
     }
     this.registerService.registerUser(this.user);
   }
