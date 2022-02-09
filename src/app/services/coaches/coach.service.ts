@@ -39,12 +39,22 @@ export class CoachService {
   }
 
   deleteCoach(id: number){
-    return this.http.delete(environment.apiUrl+`coach/${id}`);
+    return this.http.delete(environment.apiUrl+`coach/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
   }
 
   updateCoach(id: number, item: Coach)
   {
-    return this.http.put(environment.apiUrl + `coach/${id}`,item);
+    return this.http.put(environment.apiUrl + `coach/${id}`,item,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
   }
 
   

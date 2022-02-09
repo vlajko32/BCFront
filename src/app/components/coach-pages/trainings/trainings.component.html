@@ -1,1 +1,93 @@
 <app-navbar></app-navbar>
+
+
+
+
+
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <h1 class="fw-bold">Schedule a training</h1>
+        <mat-form-field appearance="fill">
+            <mat-label>Select a gym</mat-label>
+            <mat-select [formControl]="selectGym" [(value)]="selectedGym">
+              <mat-option *ngFor="let g of gyms"  [value]="g">{{g.gymName}}</mat-option>
+              
+            </mat-select>
+            <mat-error *ngIf="selectGym.invalid">Gym must have been selected!</mat-error>
+          </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Choose a date</mat-label>
+            <input [formControl]="dateInput" matInput [matDatepicker]="picker"
+            [min]="minDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        
+          <div class="ngx-timepicker-field-example"  style="width: 40%; margin-right: auto;">
+            <label>Enter training start time</label>
+            <ngx-timepicker-field   [(ngModel)]="trainingStart" [format]="24" [min]="'08:00 am'" ></ngx-timepicker-field>
+        
+          </div>
+        <div class="ngx-timepicker-field-example"  style="width: 40%;">
+          <label>Enter training end time</label>
+          <ngx-timepicker-field   [(ngModel)]="trainingEnd" [format]="24" [min]="trainingStart"  [disabled]="trainingStart==null"></ngx-timepicker-field>
+      
+        </div>
+        <div>
+          <button type="submit" class="btn btn-dark" *ngIf="trainingEnd!=null && trainingStart!=null && !selectGym.invalid" (click)="onAdd()">Add</button>
+
+        </div>
+
+          
+
+        
+    </div>
+  </section>
+  
+  <div class="album py-5 bg-light">
+    <div class="container" *ngIf="!selectGym.invalid && !dateInput.invalid">
+      <h2>Adress: {{selectGym.value['adress']}}</h2>
+      <h3>Scheduled trainings for {{dateInput.value | date: 'MM-dd-yyyy'}}:</h3>
+
+        <table mat-table [dataSource]="displayedTrainings" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+          
+            <!-- Position Column -->
+            <ng-container matColumnDef="trainingStart">
+              <th mat-header-cell *matHeaderCellDef> From </th>
+              <td mat-cell *matCellDef="let element"> {{element['trainingStart'] | date: 'HH:mm'}} </td>
+            </ng-container>
+          
+            <!-- Name Column -->
+            <ng-container matColumnDef="trainingEnd">
+              <th mat-header-cell *matHeaderCellDef> To </th>
+              <td mat-cell *matCellDef="let element" (click)="onClick()"> {{element.trainingEnd | date: 'HH:mm'}} </td>
+            </ng-container>
+          
+            <!-- Weight Column -->
+            <ng-container matColumnDef="selectionID">
+              <th mat-header-cell *matHeaderCellDef> Selection </th>
+              <td mat-cell *matCellDef="let element"> {{element.selection['selectionName']}}  </td>
+            </ng-container>
+          
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="coachID">
+              <th mat-header-cell *matHeaderCellDef> Coach </th>
+              <td mat-cell *matCellDef="let element"> {{element.coach['name']}} {{element.coach['surname']}}</td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClick()" style="cursor: pointer;"></tr>
+          </table>
+          
+          
+    
+       
+    </div>
+  </div>
+ 
+
+  
+ 

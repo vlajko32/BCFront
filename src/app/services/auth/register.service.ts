@@ -14,12 +14,8 @@ export class RegisterService {
 
 
   registerUser(user: User){
-    this.http.post(`${environment.apiUrl}Auth/register`, user).subscribe((value: Response) =>
-    {
-      this.router.navigateByUrl('/login');
-    }, error => {
-      console.log(error);
-    })
+    return this.http.post(`${environment.apiUrl}Auth/register`, user,
+    )
 
-  }
+}
 }

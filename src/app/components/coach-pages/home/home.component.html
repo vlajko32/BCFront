@@ -7,10 +7,18 @@
   </header>
 
   <main class="px-3">
-    <h1>Welcome coach {{user.name}}</h1>
-    <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-    <p class="lead">
-    </p>
+    <h1>Welcome, coach {{name}}</h1>
+    <div *ngIf="user!=null && user.selection == null else haveSelection">
+      <p class="lead fw-bold">Unfortunately, you don't have any selection given. Contact administrator if you want to get some!</p>
+      <p class="lead">
+      </p>
+    </div>
+    <ng-template #haveSelection>
+      <p class="lead fw-bold">Hope you're having a good day!</p>
+      <p class="lead">
+      </p>
+    </ng-template>
+   
   </main>
 
   <footer class="mt-auto text-white-50">

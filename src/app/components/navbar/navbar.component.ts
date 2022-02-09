@@ -15,7 +15,6 @@ export class NavbarComponent implements OnInit {
   }
   
   onLogOut(){
-    console.log("Oprem");
     localStorage.clear();
     this.router.navigateByUrl('/login');
 

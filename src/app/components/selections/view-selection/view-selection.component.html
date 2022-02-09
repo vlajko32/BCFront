@@ -2,7 +2,7 @@
 <h1 style="margin-left: 3rem; margin: 3rem;">
   Edit selection
   <button class="btn btn-primary" style="float: right; margin-left: 1rem;" (click)="onConfirm()">Confirm changes</button>
-  <button class="btn btn-danger" style="float: right;" (click)="onDiscard()">Discard</button>
+  <button class="btn btn-danger" style="float: right;" [routerLink]="['/selections']">Discard</button>
 </h1>
 <form [formGroup]="selectionForm">
   <div class="input-group mb-3" style="margin: 2rem; max-width: 50%;">
@@ -23,7 +23,7 @@
   <div class="col-6">
     <div class="table-responsive">
       <h1>Players</h1>
-      <table class="table table-hover table-dark table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
+      <table *ngIf="players != null && players.length > 0 else messagePlayers"class="table table-hover table-dark table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
         <thead>
           <tr>
             <th scope="col" style="cursor: pointer;">Name</th>
@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           
-         <tr *ngFor ="let p of players" style="cursor: pointer;">
+         <tr *ngFor ="let p of modifiedPlayers" style="cursor: pointer;">
            <td>{{p.name}}</td>
            <td>{{p.surname}}</td>
            <td >{{p.birthDate | date:'yyyy'}}</td>
@@ -44,12 +44,15 @@
           
         </tbody>
       </table>
+      <ng-template #messagePlayers>
+        <h2>There are currently no players in this selection!</h2>
+      </ng-template>
     </div>
     <div style="margin-bottom: 2rem;">
       <button type="submit" class="btn btn-primary" (click)="onAddPlayer()">Add player</button>
       </div>
       <div *ngIf="addingPlayer">
-        <table class="table table-hover table-secondary table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
+        <table *ngIf="playersWithoutSelection!=null && playersWithoutSelection.length > 0 else messageFreePlayers" class="table table-hover table-secondary table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
           <thead>
             <tr>
               <th scope="col" style="cursor: pointer;">Name</th>
@@ -61,7 +64,7 @@
           </thead>
           <tbody>
             
-           <tr *ngFor ="let p of playersWithoutSelection" style="cursor: pointer;">
+           <tr *ngFor ="let p of modifiedPlayersWithoutSelection" style="cursor: pointer;">
              <td>{{p.name}}</td>
              <td>{{p.surname}}</td>
              <td >{{p.birthDate | date:'yyyy'}}</td>
@@ -69,13 +72,17 @@
            </tr>    
           </tbody>
         </table>
+         <ng-template #messageFreePlayers>
+        <h2>There are currently no available players to add!</h2>
+      </ng-template>
       </div>
   </div>
     <div class="col-6">
 
       <div class="table-responsive">
         <h1>Coaches</h1>
-      <table class="table table-hover table-dark table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
+      <table *ngIf="modifiedCoaches!=null && 
+      modifiedCoaches.length>0 else messageCoaches" class="table table-hover table-dark table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
         <thead>
           <tr>
             <th scope="col" style="cursor: pointer;">Name</th>
@@ -88,19 +95,22 @@
         <tbody>
         
           
-         <tr *ngFor ="let c of coaches" style="cursor: pointer;">
+         <tr *ngFor ="let c of modifiedCoaches" style="cursor: pointer;">
            <td>{{c.name}}</td>
            <td>{{c.surname}}</td>
            <td >{{c.yearsOfExperience}}</td>
-           <td>Remove</td>
+           <td (click)="onRemoveCoach(c)">Remove</td>
          </tr>
         </tbody>
       </table>
+      <ng-template #messageCoaches>
+        <h2>There are currently no coaches in this selection!</h2>
+      </ng-template>
       <div style="margin-bottom: 2rem;">
         <button type="submit" class="btn btn-primary" (click)="onAddCoach()">Add coach</button>
         </div>
         <div *ngIf="addingCoach">
-          <table class="table table-hover table-secondary table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
+          <table *ngIf="modifiedCoachesWithoutSelection!=null && modifiedCoachesWithoutSelection.length>0 else noFreeCoachesMessage" class="table table-hover table-secondary table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
             <thead>
               <tr>
                 <th scope="col" style="cursor: pointer;">Name</th>
@@ -112,14 +122,17 @@
             </thead>
             <tbody>
               
-             <tr *ngFor ="let c of coachesWithoutSelection" style="cursor: pointer;">
+             <tr *ngFor ="let c of modifiedCoachesWithoutSelection" style="cursor: pointer;">
                <td>{{c.name}}</td>
                <td>{{c.surname}}</td>
                <td >{{c.yearsOfExperience}}</td>
-               <td (click)="onAdd(c)">Add</td>
+               <td (click)="onInsertCoach(c)">Add</td>
              </tr>    
             </tbody>
           </table>
+          <ng-template #noFreeCoachesMessage>
+            <h2>There are currently no available coaches to add!</h2>
+          </ng-template>
         </div>
     </div>
     <h1>Upcoming trainings</h1>

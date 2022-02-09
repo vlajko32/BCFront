@@ -2,9 +2,11 @@ import { Router } from '@angular/router';
 import { Player } from './../../domain/player';
 import { SelectionService } from './../../services/selections/selection.service';
 import { PlayerService } from './../../services/players/player.service';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-players',
@@ -12,6 +14,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./players.component.css']
 })
 export class PlayersComponent implements OnInit {
+  displayedColumns: string[] =  ['name', 'surname', 'yearOfBirth','selection'];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+
   isDesc = false;
   orderAge = false;
   dateConvert;
@@ -30,12 +38,15 @@ export class PlayersComponent implements OnInit {
   ngOnInit(): void {
     this.playerService.getPlayers().subscribe((data) =>{
       this.playersApi = this.searchedPlayers = data;
-      this.playersWithSelection = this.searchedPlayers.filter(function(player) {
-        return player['selection']!=null;
-      });
-      this.playersWithoutSelection = this.searchedPlayers.filter(function(player) {
-        return player['selection']==null;
-      });
+      this.searchedPlayers = new MatTableDataSource(this.playersApi);
+      this.searchedPlayers.sort = this.sort;
+      this.searchedPlayers.paginator = this.paginator;
+      // this.playersWithSelection = this.searchedPlayers.filter(function(player) {
+      //   return player['selection']!=null;
+      // });
+      // this.playersWithoutSelection = this.searchedPlayers.filter(function(player) {
+      //   return player['selection']==null;
+      // });
       
     }, error => {
       console.log(error);
@@ -67,7 +78,7 @@ this.newPlayer = {
   selectionID: this.addPlayerForm.get('selectionID').value
 }
 this.playerService.addPlayer(this.newPlayer).subscribe(data => {
-  this.updateList();
+  
   this.resetForm();
 });
 ;
@@ -77,7 +88,15 @@ this.playerService.addPlayer(this.newPlayer).subscribe(data => {
 onAddPlayer(){
   if(this.addPlayerForm.valid){
     this.addPlayer();
-    
+    location.reload();
+  }
+}
+
+applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.searchedPlayers.filter = filterValue.trim().toLowerCase();
+  if (this.searchedPlayers.paginator) {
+    this.searchedPlayers.paginator.firstPage();
   }
 }
 
@@ -148,8 +167,9 @@ onUpdatePlayer(){
   }
   this.playerService.updatePlayer(this.selectedPlayer.playerID,this.newPlayer).subscribe(data=> {
     console.log("Djes");
-    this.updateList();
     this.resetForm();
+    location.reload();
+
   });
 
  
@@ -173,8 +193,10 @@ this.resetForm();
 
 onDeletePlayer(){
   this.playerService.deletePlayer(this.selectedPlayer.playerID).subscribe(data=> {
-    this.updateList();
+   
     this.resetForm();
+    location.reload();
+
   })
   
 }

@@ -3,5 +3,7 @@ export interface Player{
     name: string;
     surname: string;
     birthDate: Date;
+    height?: number;
+    weight?: number;
     selectionID?: number;
 }

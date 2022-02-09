@@ -1,0 +1,40 @@
+<h1 mat-dialog-header>Edit player</h1>
+<form [formGroup]="playerForm">
+    <div class="card-body">
+     
+     
+        <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
+          <label for="firstName">First name</label>
+          <input [readonly]="true" formControlName="firstName" type="text" class="form-control" id="firstName" placeholder="Enter player's first name">
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="lastName">Last name</label>
+          <input [readonly]="true" formControlName="lastName" type="text" class="form-control" id="lastName" placeholder="Enter player's last name">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
+          <label for="birthDate">Birth date</label>
+          <input [readonly]="true" formControlName="birthDate" class="form-control" id="birthDate">
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
+            <label for="height">Height</label>
+            <input formControlName="height" type="number" class="form-control" id="height">
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="weight">Weight</label>
+            <input formControlName="weight" type="number" class="form-control" id="weight">
+          </div>
+          
+
+       
+      
+    </div>
+   
+      <div class="card-footer text-muted">
+        <div style="margin-bottom: 2rem;">
+          <button type="submit" class="btn btn-dark" style="margin-top: 1rem;" (click)="onUpdatePlayer()" mat-dialog-close="Updated">Update player</button>
+          <button type="submit" class="btn btn-danger" style="margin-top: 1rem; margin-left: 1rem;" mat-dialog-close="Dismissed">Dismiss</button>
+          </div>
+      </div>
+    
+  </form>

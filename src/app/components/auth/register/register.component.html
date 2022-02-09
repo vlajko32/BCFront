@@ -1,44 +1,77 @@
-<div style="padding: 3rem;">
+<div class="text-center" style="padding: 3rem;">
 <h1 style="font-weight: bold;">Register</h1>
-<div class="container">
+<div class="container" style="max-width: 50%;">
     <form [formGroup]="registerForm">
-        <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem; max-width: 50%;">
-          <label for="username">Username</label>
-          <input formControlName="username" type="text" class="form-control" id="username" placeholder="Enter username">
-        </div>
-        <div class="form-group" style="margin-bottom: 1rem; max-width: 50%;">
-          <label for="password">Password</label>
-          <input formControlName="password" type="password" class="form-control" id="password" placeholder="Enter password">
-        </div>
-        <div class="form-group" style="margin-bottom: 1rem; max-width: 50%;">
-          <label for="confirmPassword">Confirm Password</label>
-          <input formControlName="confirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Password">
-        </div>
-         <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem; max-width: 50%;">
-          <label for="firstName">First name</label>
-          <input formControlName="firstName" type="text" class="form-control" id="firstName" placeholder="Enter first name">
-        </div>
-        <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem; max-width: 50%;">
-          <label for="lastName">Last name</label>
-          <input formControlName="lastName" type="text" class="form-control" id="lastName" placeholder="Enter last name">
-        </div>
-       
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-          <label class="form-check-label" for="flexRadioDefault1">
-            Administrator
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" >
-          <label class="form-check-label" for="flexRadioDefault2">
-            Coach
-          </label>
-        </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter username</mat-label>
+          <input formControlName="username" matInput>
+          <mat-error>Username is required</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter password</mat-label>
+          <input type="password" formControlName="password" matInput>
+          <mat-error>Password is required</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label >Confirm password</mat-label>
+          <input type="password" formControlName="confirmPassword" matInput>
+          
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter name</mat-label>
+          <input formControlName="firstName" matInput>
+          <mat-error>Name is required</mat-error>
+
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter surname</mat-label>
+          <input formControlName="lastName" matInput>
+          <mat-error>Surname is required</mat-error>
+
+        </mat-form-field>
+      </div>
+      
+      <mat-tab-group mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
+        <mat-tab label="Operator" (click)="changeRole()"></mat-tab>
+        <mat-tab label="Coach" (click)="changeRole()">
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Years of experience</mat-label>
+              <input type="number" formControlName="yearsOfExperience" matInput>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Selection</mat-label>
+              <mat-select formControlName="selectionID">
+                <mat-option *ngFor="let sel of selections" [value]="sel.selectionID">
+                  {{sel.selectionName}}-{{sel.selectionAge['selectionAgeName']}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         
-        <div style="margin-bottom: 2rem;">
-        <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid" (click)="onRegister()">Register</button>
-        </div>
+        </mat-tab>
+        
+      </mat-tab-group>
+      <div style="margin-top: 2rem;">
+        <button class="btn btn-dark" type="submit" (click)="onRegister()">Register</button>
+
+      </div>
+      <div class="text-danger" *ngIf="!registerForm.invalid && registerForm.get('password').value != registerForm.get('confirmPassword').value">
+        Passwords must match!
+      </div>
+
       </form>
+
     </div>
   </div>

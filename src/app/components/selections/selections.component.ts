@@ -38,7 +38,7 @@ export class SelectionsComponent implements OnInit {
 
     this.createForm = new FormGroup({
       selectionName: new FormControl(null, Validators.required),
-      selectionAge: new FormControl(null, Validators.required),
+      selectionAgeID: new FormControl(null, Validators.required),
       
     });
   }
@@ -79,4 +79,30 @@ createNew(){
   this.selectionAgesSelected = null;
 }
 
+onCreate()
+{
+  let newSelection = {
+    SelectionName: this.createForm.get('selectionName').value,
+    SelectionAgeID: this.createForm.get('selectionAgeID').value
+  }
+  this.selectionService.createSelection(newSelection).subscribe(data=>
+    {
+      location.reload();
+    },
+    error => {
+      console.log(error);
+    })
+}
+
+onDelete(selection: any)
+{
+  this.selectionService.deleteSelection(selection.selectionID).subscribe(data=>
+    {
+      console.log(data);
+      location.reload();
+    },
+    error => {
+      console.log(error);
+    })
+}
 }

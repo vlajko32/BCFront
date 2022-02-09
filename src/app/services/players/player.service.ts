@@ -29,15 +29,29 @@ export class PlayerService {
 
   addPlayer(item){
     
-    return this.http.post(environment.apiUrl + 'player/create',item);
+    return this.http.post(environment.apiUrl + 'player/create',item,{
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
   }
 
   deletePlayer(id: number){
-    return this.http.delete(environment.apiUrl+`player/${id}`);
+    return this.http.delete(environment.apiUrl+`player/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
   }
 
   updatePlayer(id: number, item: Player)
   {
-    return this.http.put(environment.apiUrl + `player/${id}`,item);
+    return this.http.put(environment.apiUrl + `player/${id}`,item,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
   }
 }

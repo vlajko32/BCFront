@@ -16,13 +16,16 @@ export class ViewSelectionComponent implements OnInit {
   selection = null;
   players = null;
   coaches = null;
+  modifiedPlayers = null;
+  modifiedCoaches = null;
   selectionName: string;
   addingPlayer = false;
   addingCoach = false;
   playersWithoutSelection = null;
   coachesWithoutSelection = null;
-  addedPlayers: Player[] = null;
-  removedPlayers: Player[] = null;
+  modifiedPlayersWithoutSelection = null;
+  modifiedCoachesWithoutSelection = null;
+
   isDisabled = true;
   isDisabledAge = true;
   selectionAge: any;
@@ -39,8 +42,8 @@ export class ViewSelectionComponent implements OnInit {
       this.selectionService.getSelectionByID(this.selectionID).subscribe(data =>
         {
           this.selection = data;
-          this.players = this.selection['players'];
-          this.coaches = this.selection['coaches'];
+          this.modifiedPlayers = this.players = this.selection['players'];
+          this.modifiedCoaches = this.coaches = this.selection['coaches'];
           this.selectionName = this.selection['selectionName'];
           this.selectionAge = this.selection['selectionAge'];
           this.selectionAgeName = this.selectionAge['selectionAgeName'];
@@ -53,12 +56,12 @@ export class ViewSelectionComponent implements OnInit {
         
     });
     this.playerService.getPlayersWithoutSelection().subscribe(data => {
-      this.playersWithoutSelection = data;
+      this.modifiedPlayersWithoutSelection = this.playersWithoutSelection = data;
     });
 
     this.coachService.getCoachesWithoutSelection().subscribe(data =>
       {
-        this.coachesWithoutSelection = data;
+        this.modifiedCoachesWithoutSelection = this.coachesWithoutSelection = data;
       });
 
     this.selectionService.getSelectionAges().subscribe((data) =>{
@@ -84,47 +87,74 @@ export class ViewSelectionComponent implements OnInit {
 
   onConfirm()
   {
+    let playersAdded = [];
+    let playersRemoved = [];
+
+    this.modifiedPlayers.forEach(element => {
+      if(this.players.indexOf(element)>-1)
+      {
+        playersAdded.push(element);
+      }
+    });
+    this.modifiedPlayersWithoutSelection.forEach(element => {
+      if(this.playersWithoutSelection.indexOf(element)>-1)
+      {
+        playersRemoved.push(element);
+      }
+    });
+
+    let coachesAdded = [];
+    let coachesRemoved = [];
+    this.modifiedCoaches.forEach(element => {
+      if(this.coaches.indexOf(element)>-1)
+      {
+        coachesAdded.push(element);
+      }
+    });
+    this.modifiedCoachesWithoutSelection.forEach(element => {
+      if(this.coachesWithoutSelection.indexOf(element)>-1)
+      {
+        coachesRemoved.push(element);
+      }
+    });
+
+
+
     let updated = {
-      selectionName: this.selectionForm.get('selectionName').value,
-      selectionAgeID: this.selectionForm.get('selectionAge').value,
-      addedPlayers: this.addedPlayers,
-      removedPlayers: this.removedPlayers
+      selectionName: this.selectionName,
+      selectionAgeID: this.selectionAge['selectionAgeID'],
+      addedPlayers: playersAdded,
+      removedPlayers: playersRemoved,
+      addedCoaches: coachesAdded,
+      removedCoaches: coachesRemoved
+      
 
     };
-    this.selectionService.updateSelection(this.selectionID, updated).subscribe(data => {
+    this.selectionService.updateSelection(this.selection['selectionID'], updated).subscribe(data => {
       console.log(data);
+      location.reload();
     })
   }
+ 
 
-  onAdd(p: Player)
+  onAdd(p: any)
   {
-    if(this.removedPlayers==null)
-    {
-      this.players.push(p);
-      if(this.addedPlayers==null)
-      this.addedPlayers = [p];
-      console.log(this.addedPlayers);
-    }
-    else{
-    let index2 = null;;
-    this.players.push(p);
+    this.modifiedPlayers.push(p);
+    let index = this.modifiedPlayersWithoutSelection.indexOf(p);
+    this.modifiedPlayersWithoutSelection.splice(index,1);
     
-    let index = this.playersWithoutSelection.indexOf(p);
-    if(this.removedPlayers != null){
-      index2 = this.removedPlayers.indexOf(p);
+  }
 
-    }
-    this.playersWithoutSelection.splice(index,1);
-    if(!(this.addedPlayers.indexOf(p) > -1))
-    {
-      this.addedPlayers.push(p);
-    }
-    if(index2 > -1)
-    {
-      this.removedPlayers.splice(index2,1);
-    }
+
+  onInsertCoach(c: any)
+  {
+    this.modifiedCoaches.push(c);
+    let index = this.modifiedCoachesWithoutSelection.indexOf(c);
+    this.modifiedCoachesWithoutSelection.splice(index,1);
+    
   }
-  }
+
+
 
   onChangeName()
   {
@@ -139,32 +169,21 @@ export class ViewSelectionComponent implements OnInit {
   {
     this.isDisabledAge = !this.isDisabledAge;
   }
-  onRemove(p: Player)
-  {
-    if(this.removedPlayers == null){
-      this.removedPlayers = [p];
-      let index = this.players.indexOf(p);
-      this.players.splice(index,1);
-      this.playersWithoutSelection.push(p);
 
-    }
-    else{
-    let index = this.players.indexOf(p);
-    let index2 = this.addedPlayers.indexOf(p);
-    this.players.splice(index,1);
-    this.playersWithoutSelection.push(p);
-    if(!(this.removedPlayers.indexOf(p) > -1))
-    {
-      this.removedPlayers.push(p);
-    }
-    if(index2 > -1)
-    {
-      this.addedPlayers.splice(index2,1);
-    }
+  onRemove(p: any)
+  {
+    this.modifiedPlayersWithoutSelection.push(p);
+    let index = this.modifiedPlayers.indexOf(p);
+    this.modifiedPlayers.splice(index,1);
   }
-  console.log(this.removedPlayers);
-  console.log(this.addedPlayers);
+
+  onRemoveCoach(p: any)
+  {
+    this.modifiedCoachesWithoutSelection.push(p);
+    let index = this.modifiedCoaches.indexOf(p);
+    this.modifiedCoaches.splice(index,1);
   }
+ 
 
   onAddPlayer(){
     this.addingPlayer = !this.addingPlayer;

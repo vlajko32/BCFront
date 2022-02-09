@@ -19,6 +19,22 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { HomeComponent } from './components/coach-pages/home/home.component';
 import { MySelectionComponent } from './components/coach-pages/my-selection/my-selection.component';
 import { TrainingsComponent } from './components/coach-pages/trainings/trainings.component';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {MatButtonModule} from '@angular/material/button';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
+import { EditDialogComponent } from './components/coach-pages/my-selection/edit-dialog/edit-dialog.component';
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +48,7 @@ import { TrainingsComponent } from './components/coach-pages/trainings/trainings
     HomeComponent,
     MySelectionComponent,
     TrainingsComponent,
+    EditDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +61,17 @@ import { TrainingsComponent } from './components/coach-pages/trainings/trainings
     MatTabsModule,
     MatIconModule,
     MatButtonToggleModule,
+    MatSliderModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    NgxMaterialTimepickerModule,
+    MatButtonModule,
+    MatRadioModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatDialogModule
     
   ],
   providers: [HttpClient],

@@ -1,8 +1,10 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectionService } from './../../services/selections/selection.service';
 import { CoachService } from './../../services/coaches/coach.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Coach } from 'src/app/domain/coach';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-coaches',
@@ -10,6 +12,12 @@ import { Coach } from 'src/app/domain/coach';
   styleUrls: ['./coaches.component.css']
 })
 export class CoachesComponent implements OnInit {
+  displayedColumns: string[] =  ['name', 'surname', 'yearsOfExperience','selection'];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+
   coaches= null;
   coachesWithSelection = null;
   coachesWithoutSelection = null;
@@ -47,9 +55,10 @@ export class CoachesComponent implements OnInit {
     this.editCoachForm = new FormGroup({
       firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),     
       lastName: new FormControl(null,  [Validators.required, Validators.minLength(3)]),
-      yearsOfExperience: new FormControl(null, Validators.required),
+      yearsOfExperience: new FormControl(null, [Validators.required, Validators.min(0)]),
       selectionID: new FormControl(null)
   })
+  this.editCoachForm.disable();
   }
 
   sortString(info){
@@ -94,6 +103,10 @@ export class CoachesComponent implements OnInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchedCoaches.filter = filterValue.trim().toLowerCase();
+  }
  onCoach(c)
  {
   this.editCoachForm.setValue({
@@ -102,6 +115,8 @@ export class CoachesComponent implements OnInit {
     yearsOfExperience: c.yearsOfExperience,
     selectionID: c.selectionID
   });
+  this.editCoachForm.get('yearsOfExperience').enable();
+  this.editCoachForm.get('selectionID').enable();
   this.selectedCoach = c;
   }
 
@@ -119,6 +134,10 @@ export class CoachesComponent implements OnInit {
        surname: this.editCoachForm.get('lastName').value,
        yearsOfExperience: this.editCoachForm.get('yearsOfExperience').value,
        selectionID: this.editCoachForm.get('selectionID').value
+     }
+     if(this.updatedCoach.selectionID == null)
+     {
+       this.updatedCoach.selectionID = 0;
      }
      this.coachService.updateCoach(this.selectedCoach.userID, this.updatedCoach).subscribe(data=>
       {

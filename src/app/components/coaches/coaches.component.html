@@ -1,42 +1,52 @@
 <app-navbar></app-navbar>
-<div class="row" style="padding: 5rem; margin-left: 5rem;">
+<div class="row" style="padding: 5rem;">
  
     <div class="col-9">
-      <h2>Find and edit coaches</h2>
-        <div class="d-flex align-items-center">
-            <form class="w-50 me-3" style="justify-content: center;">
-              <input [ngModelOptions]="{standalone: true}" [(ngModel)]="searchText" (ngModelChange)="onSearch()" type="search" class="form-control" placeholder="Search for a coach" aria-label="Search">
-            </form>        
-        </div>
-        <div class="table-responsive">
-    <table class="table table-hover table-dark table-bordered overflow" style="margin-top: 2rem; max-width: 70%; max-height: 30rem;">
-      <caption>Click on a row in order to edit or delete coach</caption>
-      <thead>
-        <tr>
-          <th scope="col" (click)="sortString('name')" style="cursor: pointer;">Name</th>
-          <th scope="col" (click)="sortString('surname')" style="cursor: pointer;">Surname</th>
-          <th scope="col" (click)="sortExp()"  style="cursor: pointer;">Years of Experience</th>
-          <th scope="col" style="cursor: pointer;">Selection</th>
-         
-        </tr>
-      </thead>
-      <tbody>
-      
-      
+      <div class="container">
+        <h2>Find and edit coaches</h2>
+        <mat-form-field appearance="fill" style="width: 100%;">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Type a name or surname of a player" #input>
+        </mat-form-field>
+        <table mat-table [dataSource]="searchedCoaches" class="mat-elevation-z8" matSort>
+
         
-       <tr *ngFor ="let c of searchedCoaches" (click)="onCoach(c)" style="cursor: pointer;">
-         <td>{{c.name}}</td>
-         <td>{{c.surname}}</td>
-         <td >{{c.yearsOfExperience}}</td>
-         <td *ngIf="c['selection']!=null">{{c.selection.selectionName }}</td>
-         <td *ngIf="c['selection']==null">Unselected</td>
-       </tr>
-      </tbody>
-    </table>
-  </div>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let element">  {{element.name}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="surname">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Surname </th>
+            <td mat-cell *matCellDef="let element"> {{element.surname}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="yearsOfExperience" mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef> Years of experience </th>
+            <td mat-cell *matCellDef="let element"> {{element.yearsOfExperience}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="selection">
+            <th mat-header-cell *matHeaderCellDef> Selection </th>
+            <td mat-cell *matCellDef="let element"> {{element.selection==null ? 'Unselected' : element.selection['selectionName']}}-{{element.selection==null ? '' : element.selection['selectionAge']['selectionAgeName']}}</td>
+          </ng-container>
+
+         
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onCoach(row)" style="cursor: pointer;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+
+        </div>
+   
   </div>
   
-  <div class="col-3" style="min-width: 10rem;">
+  <div class="col-3"  style="min-width: 10rem; margin-top: 5%;">
     <div class="card text-center">
       <div class="card-header" *ngIf="isEditing===false; else Editing">
         
@@ -71,13 +81,13 @@
           
           <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
             <label for="yearsOfExperience">Years of experience</label>
-            <input [readonly]="isEditing" formControlName="yearsOfExperience" type="number" class="form-control" id="yearsOfExperience" placeholder="0" [disabled]="true">
+            <input [readonly]="isEditing" formControlName="yearsOfExperience" type="number" class="form-control" id="yearsOfExperience" placeholder="0">
           </div>
 
           <div class="form-group" style="margin-bottom: 1rem; margin-top: 1rem;">
             <label for="selectionID">Selection</label>
             <select class="form-control" id="selectionID" formControlName="selectionID">
-              <option value="null">Unselected</option>
+              <option value="0">Unselected</option>
               <option  *ngFor="let s of selectionsApi" value="{{s.selectionID}}">"{{s.selectionName}}-{{s.selectionAge['selectionAgeName']}}"</option>
             </select>
           </div>
@@ -85,8 +95,8 @@
       </div>
       <div class="card-footer text-muted">
         <div style="margin-bottom: 2rem;">
-          <button type="submit" class="btn btn-dark" [disabled]="editCoachForm.invalid" style="margin-top: 1rem;" (click)="onUpdate()">Update coach</button>
-          <button type="submit" class="btn btn-danger" [disabled]="editCoachForm.invalid"  style="margin-top: 1rem; margin-left: 1rem;" (click)="onDelete()">Delete coach</button>
+          <button type="submit" class="btn btn-dark" [disabled]="editCoachForm.invalid || !editCoachForm.enabled" style="margin-top: 1rem;" (click)="onUpdate()">Update coach</button>
+          <button type="submit" class="btn btn-danger" [disabled]="!editCoachForm.enabled"  style="margin-top: 1rem; margin-left: 1rem;" (click)="onDelete()">Delete coach</button>
           </div>
       </div>
      

@@ -1,3 +1,4 @@
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -8,12 +9,15 @@ import {Response} from "../../domain/response";
   providedIn: 'root'
 })
 export class LoginService {
-
+  
+  horizontalPosition: MatSnackBarHorizontalPosition = 'right';
+  verticalPositionBottom: MatSnackBarVerticalPosition = 'bottom';
+  verticalPositionTop: MatSnackBarVerticalPosition = 'bottom';
   private headers = new HttpHeaders({'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
   private options = {headers: this.headers};
 
   
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService, private snackBar: MatSnackBar) { }
 
   public login(username: string, password: string){
     this.http.post(environment.apiUrl+'auth/login',{username,password},this.options).subscribe((value:Response) => {
@@ -34,7 +38,17 @@ export class LoginService {
       }
 
     }, error => {
-      console.log(error);
+      this.openSnackBarLogin(error.error);
     })
+  }
+
+  openSnackBarLogin(message: string) {
+    this.snackBar.open(message, 'Dismiss', {
+      duration: 3000,
+      panelClass:['redNoMatch'],
+
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPositionTop,
+    });
   }
 }
