@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Coach } from 'src/app/domain/coach';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-coaches',
@@ -41,6 +42,9 @@ export class CoachesComponent implements OnInit {
       this.coachesWithoutSelection= this.coaches.filter(function(coach) {
         return coach['selection']==null;
       })
+      this.searchedCoaches = new MatTableDataSource(this.coaches);
+      this.searchedCoaches.sort = this.sort;
+      this.searchedCoaches.paginator = this.paginator;
     }, error => {
       console.log(error);
     });
@@ -93,15 +97,7 @@ export class CoachesComponent implements OnInit {
   }
 
 
-  onSearch(){
-    this.searchedCoaches = this.coaches.filter((value, index) => {
-      let joined = value.name + ' ' + value.surname;
-      
-      if (joined.toLowerCase().includes(this.searchText.toLowerCase())) {
-        return value;
-      }
-    });
-  }
+  
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -161,6 +157,9 @@ export class CoachesComponent implements OnInit {
       this.coachService.getCoaches().subscribe(data=>
         {
           this.coaches = this.searchedCoaches = data;
+          this.searchedCoaches = new MatTableDataSource(this.coaches);
+         this.searchedCoaches.sort = this.sort;
+         this.searchedCoaches.paginator = this.paginator;
         })
     }
 }

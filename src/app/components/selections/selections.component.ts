@@ -1,6 +1,8 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SelectionService } from './../../services/selections/selection.service';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-selections',
@@ -18,7 +20,7 @@ export class SelectionsComponent implements OnInit {
   selectedSelections: any;
   creating = false;
   createForm: FormGroup;
-  constructor( private selectionService: SelectionService) { }
+  constructor( private selectionService: SelectionService,  public dialog: MatDialog) { }
 
   ngOnInit(): void {
     
@@ -96,7 +98,20 @@ onCreate()
 
 onDelete(selection: any)
 {
-  this.selectionService.deleteSelection(selection.selectionID).subscribe(data=>
+  this.openDialog(selection)
+  // this.selectionService.deleteSelection(selection.selectionID).subscribe(data=>
+  //   {
+  //     console.log(data);
+  //     location.reload();
+  //   },
+  //   error => {
+  //     console.log(error);
+  //   })
+}
+
+deleteSelection(selection: any)
+{
+   this.selectionService.deleteSelection(selection.selectionID).subscribe(data=>
     {
       console.log(data);
       location.reload();
@@ -104,5 +119,20 @@ onDelete(selection: any)
     error => {
       console.log(error);
     })
+
+}
+
+
+openDialog(selection: any)
+{
+  this.dialog.open(DeleteDialogComponent, 
+    {
+    
+    width: '450px',
+    data: selection
+  }).afterClosed().subscribe(data=>{
+    if(data=="Delete")
+    this.deleteSelection(selection);
+  })
 }
 }

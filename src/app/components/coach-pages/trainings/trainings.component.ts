@@ -20,15 +20,17 @@ export class TrainingsComponent implements OnInit {
   selectedDate = null;
   trainingStart: any;
   trainingEnd: any;
-  displayedColumns: string[] =  ['trainingStart', 'trainingEnd', 'coachID', 'selectionID'];
+  displayedColumns: string[] =  ['date','trainingStart', 'trainingEnd', 'coachID', 'selectionID'];
 
   dateInput: FormControl;
-  trainings = null;
+  trainings: any;
   displayedTrainings = null;
   coachID: any;
   selectionID: any;
   coach: any;
-  selection: Object;
+  selection: any;
+  selectionName: any;
+  trainingDuration: any;
 
   constructor(private gymService: GymService, private coachService: CoachService, private trainingService: TrainingService,
      private selectionService: SelectionService, private snackBar: SnackBarService, private route: Router) { }
@@ -49,6 +51,7 @@ export class TrainingsComponent implements OnInit {
         this.selectionService.getSelectionByID(this.selectionID).subscribe(data => {
         
           this.selection = data;
+          this.selectionName = this.selection['selectionName'];
         })
       }
       else
@@ -58,7 +61,7 @@ export class TrainingsComponent implements OnInit {
       
     });
     this.minDate = new Date();
-    this.dateInput = new FormControl(new Date(),Validators.required);
+    this.dateInput = new FormControl(null,Validators.required);
 
     this.selectGym = new FormControl('', Validators.required);
     this.dateInput.disable();
@@ -67,26 +70,31 @@ export class TrainingsComponent implements OnInit {
       this.trainingService.getTrainingsByGym(selectedValue.gymID).subscribe(
         data =>
         {
-          console.log(data);
+          
           this.trainings = data;
           this.dateInput.setValue(new Date());
         }
       )
-
       this.dateInput.enable();
     })
 
+  
 
     this.dateInput.valueChanges.subscribe(selectedValue => {
-      this.displayedTrainings = this.trainings.filter((data,index) => {
-        
+      
+         
+      setTimeout(() => {  this.displayedTrainings = this.trainings.filter((data,index) => {
+
         let dateToCheck = new Date(data['trainingStart']);
-        if(selectedValue.getDate() == dateToCheck.getDate())
+        if(selectedValue!= null && selectedValue.getDate() == dateToCheck.getDate())
         {
           return data;
 
         }
-      })
+      })  }, 3000);
+
+     
+     
     })
 
    
@@ -129,6 +137,7 @@ export class TrainingsComponent implements OnInit {
           this.trainingService.addTraining(training).subscribe(data => 
             {
               this.snackBar.openSnackBar("Training scheduled!");
+              location.reload();
             });
         }
         else{
@@ -235,6 +244,9 @@ export class TrainingsComponent implements OnInit {
         return false;
       }
     }
+
+    this.trainingDuration = [endTime[0] - startTime[0], endTime[0] - startTime[0] ]
+    console.log(this.trainingDuration[0] + 'h ' + this.trainingDuration[1] + 'min');
     return true;
   }
 

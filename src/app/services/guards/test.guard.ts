@@ -10,7 +10,7 @@ export class TestGuard implements CanLoad {
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if(localStorage.getItem('role')=='Operator')
+      if(localStorage.getItem('role')=='Administrator')
       {
         this.route.navigateByUrl('/selections');
         return false;

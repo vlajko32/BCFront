@@ -75,10 +75,11 @@ this.newPlayer = {
   name: this.addPlayerForm.get('firstName').value,
   surname: this.addPlayerForm.get('lastName').value,
   birthDate: this.addPlayerForm.get('birthDate').value,
-  selectionID: this.addPlayerForm.get('selectionID').value
+  selectionID: this.addPlayerForm.get('selectionID').value!=null ? this.addPlayerForm.get('selectionID').value : 0
 }
 this.playerService.addPlayer(this.newPlayer).subscribe(data => {
-  
+  this.updateList();
+
   this.resetForm();
 });
 ;
@@ -88,7 +89,7 @@ this.playerService.addPlayer(this.newPlayer).subscribe(data => {
 onAddPlayer(){
   if(this.addPlayerForm.valid){
     this.addPlayer();
-    location.reload();
+   // location.reload();
   }
 }
 
@@ -166,9 +167,9 @@ onUpdatePlayer(){
     selectionID: this.addPlayerForm.get('selectionID').value
   }
   this.playerService.updatePlayer(this.selectedPlayer.playerID,this.newPlayer).subscribe(data=> {
-    console.log("Djes");
+    this.updateList();
     this.resetForm();
-    location.reload();
+    
 
   });
 
@@ -193,9 +194,9 @@ this.resetForm();
 
 onDeletePlayer(){
   this.playerService.deletePlayer(this.selectedPlayer.playerID).subscribe(data=> {
-   
-    this.resetForm();
-    location.reload();
+    this.updateList();
+        this.resetForm();
+    // location.reload();
 
   })
   
@@ -214,6 +215,10 @@ resetForm(){
 updateList(){
   this.playerService.getPlayers().subscribe((data) =>{
     this.playersApi = this.searchedPlayers = data;
+    
+    this.searchedPlayers = new MatTableDataSource(this.playersApi);
+    this.searchedPlayers.sort = this.sort;
+    this.searchedPlayers.paginator = this.paginator;
     
   }, error => {
     console.log(error);

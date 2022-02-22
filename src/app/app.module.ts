@@ -31,6 +31,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import { EditDialogComponent } from './components/coach-pages/my-selection/edit-dialog/edit-dialog.component';
+import { DeleteDialogComponent } from './components/selections/delete-dialog/delete-dialog.component';
 
 
 
@@ -49,6 +50,7 @@ import { EditDialogComponent } from './components/coach-pages/my-selection/edit-
     MySelectionComponent,
     TrainingsComponent,
     EditDialogComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,

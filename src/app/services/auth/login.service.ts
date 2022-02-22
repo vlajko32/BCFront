@@ -29,7 +29,7 @@ export class LoginService {
       this.authService.role = value.user.role.toString();
       this.authService.token = value.token.toString();
 
-      if(value.user.role === 'Operator'){
+      if(value.user.role === 'Administrator'){
         this.router.navigateByUrl('/selections');
       }else if(value.user.role === 'Coach'){
         this.router.navigateByUrl('/user-home');
@@ -38,7 +38,7 @@ export class LoginService {
       }
 
     }, error => {
-      this.openSnackBarLogin(error.error);
+      this.openSnackBarLogin("Unsuccessful login!");
     })
   }
 

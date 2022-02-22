@@ -31,16 +31,18 @@ export class RegisterComponent implements OnInit {
       confirmPassword: new FormControl(null, [Validators.required]),
       firstName: new FormControl(null, Validators.required),
       lastName: new FormControl(null, Validators.required),
-      role: new FormControl('Operator'),
+      role: new FormControl('Administrator'),
       yearsOfExperience: new FormControl(null),
       selectionID: new FormControl(null)
       
     });
-    this.role = 'Operator';
+    this.role = 'Administrator';
     this.selectionService.getSelections().subscribe(data => {
       this.selections = data; 
     })
-    
+
+    this.openSnackBarRegister("Error while creating a training");
+
     
   }
 
@@ -51,7 +53,7 @@ export class RegisterComponent implements OnInit {
     });
     snackBarRef.afterDismissed().subscribe(() =>
     {
-      if(message == 'Registered!')
+      if(message == 'Registered successfully!!')
       {
         this.registerForm.reset();
       }
@@ -79,7 +81,7 @@ export class RegisterComponent implements OnInit {
     }
     console.log(this.user);
     this.registerService.registerUser(this.user).subscribe(data => {
-      this.openSnackBarRegister('Registered!');
+      this.openSnackBarRegister('Registered successfully!');
     }, error => {
       console.log(error);
       this.openSnackBarRegister(error.error);
@@ -94,21 +96,21 @@ export class RegisterComponent implements OnInit {
 
   changeRole()
   {
-    if(this.role == 'Operator')
+    if(this.role == 'Administrator')
     {
       this.role = 'Coach';
     }
     else{
-      this.role = 'Operator';
+      this.role = 'Administrator';
     }
   }
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    if(this.role == 'Operator')
+    if(this.role == 'Administrator')
     {
       this.role = 'Coach';
     }
     else{
-      this.role = 'Operator';
+      this.role = 'Administrator';
     }
 }
 
