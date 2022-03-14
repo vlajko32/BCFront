@@ -6,6 +6,7 @@ userID?: number;
   name: string,
   surname: string
   yearsOfExperience?: number,
-  selectionID?: number
+  selectionID?: number,
+  code?: number
   }
   

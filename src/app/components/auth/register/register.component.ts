@@ -33,7 +33,8 @@ export class RegisterComponent implements OnInit {
       lastName: new FormControl(null, Validators.required),
       role: new FormControl('Administrator'),
       yearsOfExperience: new FormControl(null),
-      selectionID: new FormControl(null)
+      selectionID: new FormControl(null),
+      code: new FormControl(null, Validators.required)
       
     });
     this.role = 'Administrator';
@@ -41,7 +42,6 @@ export class RegisterComponent implements OnInit {
       this.selections = data; 
     })
 
-    this.openSnackBarRegister("Error while creating a training");
 
     
   }
@@ -72,7 +72,7 @@ export class RegisterComponent implements OnInit {
       password: this.registerForm.get('password').value,
       name: this.registerForm.get('firstName').value,
       surname: this.registerForm.get('lastName').value,
-      
+      code: this.registerForm.get('code').value
     }
     if(this.role == 'Coach')
     {

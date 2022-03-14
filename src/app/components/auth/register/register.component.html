@@ -6,7 +6,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Enter username</mat-label>
           <input formControlName="username" matInput>
-          <mat-error>Username is required</mat-error>
+          <mat-error>Username is required and must be more than 3 characters long</mat-error>
         </mat-form-field>
       </div>
       <div>
@@ -63,6 +63,14 @@
         </mat-tab>
         
       </mat-tab-group>
+      <div style="margin-top: 1rem;">
+        <mat-form-field appearance="fill">
+          <mat-label>Registration code</mat-label>
+          <input formControlName="code" matInput>
+          <mat-error>Code is required</mat-error>
+
+        </mat-form-field>
+      </div>
       <div style="margin-top: 2rem;">
         <button class="btn btn-dark" type="submit" (click)="onRegister()">Register</button>
 
